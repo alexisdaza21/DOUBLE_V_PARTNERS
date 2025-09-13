@@ -1,0 +1,49 @@
+# Carpeta de dependencias de NuGet
+**/bin/
+**/obj/
+
+# Archivos de configuración de Visual Studio
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Archivos de configuración de Rider
+.idea/
+
+# Archivos de registro y salida de depuración
+*.log
+*.txt
+*.nlog
+
+# Archivos generados automáticamente
+*.cache
+*.tmp
+
+# Archivos de publicación
+**/publish/
+**/wwwroot/
+
+# Archivos de configuración local
+appsettings.Development.json
+appsettings.Production.json
+appsettings.Staging.json
+
+# Archivos de migración de Entity Framework
+**/Migrations/
+
+# Archivos de respaldo
+*.bak
+*.bak1
+*.bak2
+*.bak3
+*.bak4
+*.bak5
+
+# Archivos de caché
+*.db
+*.db-shm
+*.db-wal
+
+# Archivos de registros
