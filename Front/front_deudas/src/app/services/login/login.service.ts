@@ -14,12 +14,7 @@ export class LoginService {
   constructor(private http: HttpClient) { }
 
   registrarUsuario(usuarioRegistro: Usuario): Observable<any> {
-    const headers =
-    {
-      'Authorization': `Bearer ${localStorage.getItem('hsJwt')}`,
-      'My-Custom-Header': 'foobar'
-    };
-    let options = { headers };
-    return this.http.post<any>(`${this.apiUrl}/Usuario/CreateUsuarios`, usuarioRegistro, options);
+
+    return this.http.post<any>(`${this.apiUrl}/Usuario/CreateUsuarios`, usuarioRegistro);
   }
 }

@@ -11,6 +11,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using Utils;
 
 namespace Services.Deuda
 {
@@ -29,6 +30,8 @@ namespace Services.Deuda
         {
             try
             {
+                var encryp = new Crypter();
+                datos.password = encryp.Encripta(datos.password);
                 await _context.Usuarios.AddAsync(datos);
                 var result = await _context.SaveChangesAsync();
                 return result > 0;

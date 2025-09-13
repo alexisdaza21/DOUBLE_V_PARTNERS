@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonService } from './services/common/common.service';
-
+import { environment } from '../Eviroments/enviroments';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -15,7 +15,7 @@ export class AppComponent {
     .subscribe( (response: any) => {
       debugger
       if (response.status === 200) {
-        localStorage.setItem('hsJwt', response.data);
+        environment.hsJwt = response.data;
       }
     }
   );
