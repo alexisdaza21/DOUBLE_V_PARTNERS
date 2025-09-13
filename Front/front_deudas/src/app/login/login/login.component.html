@@ -33,12 +33,12 @@
     <h3>Registrarse</h3>
     <div class="input-group">
         <label for="regEmail">Correo</label>
-        <input type="email" id="regEmail" [(ngModel)]="registerEmail" placeholder="Ingrese su correo"
+        <input type="email" id="regEmail" [(ngModel)]="_loginCreate.correo" placeholder="Ingrese su correo"
             autocomplete="off" />
     </div>
     <div class="input-group">
         <label for="regUsername">Contraseña</label>
-        <input type="password" id="regUsername" [(ngModel)]="registerUsername" placeholder="Ingrese su contraseña"
+        <input type="password" id="regUsername" [(ngModel)]="_loginCreate.password" placeholder="Ingrese su contraseña"
             autocomplete="off" />
     </div>
     <button (click)="onRegister()">Registrarse</button>

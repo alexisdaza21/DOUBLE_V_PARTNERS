@@ -1,5 +1,7 @@
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { Component } from '@angular/core';
+import { CommonService } from 'src/app/services/common/common.service';
+import { Usuario } from '../../clases/usuario';
 
 @Component({
   selector: 'app-login',
@@ -29,6 +31,9 @@ export class LoginComponent {
   showRegisterModal = false;
   registerEmail = '';
   registerUsername = '';
+  _loginUser = new Usuario();
+  _loginCreate = new Usuario();
+  constructor(private commonService: CommonService) { }
 
 
   onLogin() {
@@ -43,7 +48,35 @@ export class LoginComponent {
     this.showRegisterModal = false;
   }
 
-  onRegister() {
+  async onRegister() {
+    const validate = await this.validarCampos(this._loginCreate);
+    if (validate) {
+      alert(validate)
+    }
   }
 
+  async validarCampos(datos: Usuario) {
+
+    const result = this.commonService.validateModel(datos)
+    if (result.length > 0) {
+      let strErrores = '';
+      for (const error of result) {
+        for (const constraint in error.constraints) {
+          if (Object.prototype.hasOwnProperty.call(error.constraints, constraint)) {
+            strErrores += `- ${error.constraints[constraint]} \n `;
+          }
+        }
+      }
+      this.commonService.mostrarAlert('Error', strErrores);
+
+    
+      
+      return false;
+    } else {
+      return true;
+    }
+
+  }
+
+  
 }
