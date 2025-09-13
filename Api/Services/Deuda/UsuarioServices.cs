@@ -8,6 +8,7 @@ using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
@@ -43,13 +44,25 @@ namespace Services.Deuda
       
         }
 
-        public async Task<List<UsuarioDTO>> GetUsuarios()
+
+        public async Task<List<UsuarioDTO>> GetUsuarios(UsuarioDTO datos)
         {
-            var dat = await _context.Usuarios.ToListAsync();
-            return dat;
+            var usuarios = new List<UsuarioDTO>();
+            if (!string.IsNullOrEmpty(datos.email) && !string.IsNullOrEmpty(datos.password))
+            {
+                var encryp = new Crypter();
+                datos.password = encryp.Encripta(datos.password);
+                usuarios = await _context.Usuarios.Where(w => w.email == datos.email && w.password == datos.password)
+                    .Select(s => new UsuarioDTO { id = s.id, email = s.email }).ToListAsync();
+
+            }
+            else {
+                usuarios = await _context.Usuarios.Select(s => new UsuarioDTO { id = s.id, email = s.email }).ToListAsync();
+            }
+            return usuarios;
         }
 
-        public async Task<string> getTokenInvitado(string usuario)
+        public async Task<string> GetTokenAnonimo(string usuario)
         {
             return await generarToken(usuario, "Anonimo");
         }

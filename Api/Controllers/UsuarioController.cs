@@ -40,15 +40,15 @@ namespace Controllers
         /// <returns>token sha 512</returns>
         [HttpPost]
         [AllowAnonymous]
-        [Route("getTokenAnonimo")]
+        [Route("GetTokenAnonimo")]
         //[ApiExplorerSettings(IgnoreApi = true)]
         
-        public async Task<JsonResultHelper> getTokenInvitado()
+        public async Task<JsonResultHelper> GetTokenAnonimo()
         {
             try
             {
 
-                var result = await _IUsuarios.getTokenInvitado(_configuration.GetValue<string>("UsuarioAnonimo"));
+                var result = await _IUsuarios.GetTokenAnonimo(_configuration.GetValue<string>("UsuarioAnonimo"));
                 if (!string.IsNullOrEmpty(result))
                 {
                     resultJson.Data = result;
@@ -76,13 +76,13 @@ namespace Controllers
         /// <returns>listado de usuarios</returns>
         [HttpGet]
         [Route("GetUsuarios")]
-        [Authorize(Roles = "Autenticado, Anonimo")]
+        [Authorize(Roles = "Autenticado")]
         public async Task<JsonResultHelper> GetUsuarios()
         {
         
             try
             {
-                resultJson.Data = await _IUsuarios.GetUsuarios();
+                resultJson.Data = await _IUsuarios.GetUsuarios(null);
             }
             catch (Exception e)
             {
@@ -110,5 +110,39 @@ namespace Controllers
             }
             return resultJson;
         }
+
+
+        /// <summary>
+        /// metodo para validar existebcua de usuario
+        /// </summary>
+        /// <returns>usuario</returns>
+        [HttpPost]
+        [Route("GetUsuarioLogin")]
+        [Authorize(Roles = "Autenticado, Anonimo")]
+        public async Task<JsonResultHelper> GetUsuarioLogin(UsuarioDTO datos)
+        {
+
+            try
+            {
+                var result = await _IUsuarios.GetUsuarios(datos);
+
+                if (result.Count > 0)
+                {
+                    resultJson.Data = result;
+                    resultJson.mensaje = "Usuario encontrado";
+                }
+                else {
+                    resultJson.mensaje = "Usuario no encontrado";
+                    resultJson.Status = System.Net.HttpStatusCode.NoContent;
+                }
+            }
+            catch (Exception e)
+            {
+                resultJson.Status = System.Net.HttpStatusCode.BadRequest;
+                resultJson.Errors.Add(e.Message);
+            }
+            return resultJson;
+        }
+
     }
 }

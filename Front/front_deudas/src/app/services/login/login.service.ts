@@ -14,7 +14,10 @@ export class LoginService {
   constructor(private http: HttpClient) { }
 
   registrarUsuario(usuarioRegistro: Usuario): Observable<any> {
-
     return this.http.post<any>(`${this.apiUrl}/Usuario/CreateUsuarios`, usuarioRegistro);
+  }
+
+  login(usuarioRegistro: Usuario): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/Usuario/GetUsuarioLogin`, usuarioRegistro);
   }
 }

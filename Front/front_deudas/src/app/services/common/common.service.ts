@@ -23,7 +23,7 @@ export class CommonService {
 
     getTokenAnonimo(): Observable<any> {
 
-        return this.http.post<any>(`${this.api}/Usuario/getTokenAnonimo`,{});
+        return this.http.post<any>(`${this.api}/Usuario/GetTokenAnonimo`,{});
     }
 
 }

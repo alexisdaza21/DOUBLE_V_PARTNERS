@@ -25,22 +25,25 @@ import { LoginService } from '../../services/login/login.service';
   ]
 })
 export class LoginComponent {
-  email = '';
-  password = '';
-  token = '';
-  error = '';
+
   showRegisterModal = false;
-  registerEmail = '';
-  registerUsername = '';
+
   _loginUser = new Usuario();
   _loginCreate = new Usuario();
   constructor(private commonService: CommonService, private loginService: LoginService) { }
 
 
   async onLogin() {
-    const validate = await this.validarCampos(this._loginCreate);
+    const validate = await this.validarCampos(this._loginUser);
     if (validate) {
-      alert(validate)
+      this.loginService.login(this._loginUser).subscribe(
+        (response: any) => {
+          debugger
+          var strTitulo = response.status == 200 ? 'Correcto' : 'Error';
+          this.commonService.mostrarAlert(strTitulo, response.mensaje);
+          this._loginCreate = new Usuario();
+        }
+      )
     }
   }
 
@@ -59,9 +62,9 @@ export class LoginComponent {
       this.loginService.registrarUsuario(this._loginCreate).subscribe(
         (response: any) => {
           debugger
-            var strTitulo = response.status ==  200 ? 'Correcto' : 'Error';
-            this.commonService.mostrarAlert(strTitulo, response.mensaje);    
-            this._loginCreate = new Usuario();
+          var strTitulo = response.status == 200 ? 'Correcto' : 'Error';
+          this.commonService.mostrarAlert(strTitulo, response.mensaje);
+          this._loginCreate = new Usuario();
         }
 
       )
@@ -80,8 +83,8 @@ export class LoginComponent {
           }
         }
       }
-      this.commonService.mostrarAlert('Error', strErrores);    
-      
+      this.commonService.mostrarAlert('Error', strErrores);
+
       return false;
     } else {
       return true;
@@ -89,5 +92,5 @@ export class LoginComponent {
 
   }
 
-  
+
 }
