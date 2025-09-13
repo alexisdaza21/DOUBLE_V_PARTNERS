@@ -21,5 +21,9 @@ export class CommonService {
         alert(`${header}\n\n${message}`);
     }
 
+    getTokenAnonimo(): Observable<any> {
+
+        return this.http.post<any>(`${this.api}/Usuario/getTokenAnonimo`,{});
+    }
 
 }

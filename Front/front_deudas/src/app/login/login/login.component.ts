@@ -2,6 +2,7 @@ import { animate, state, style, transition, trigger } from '@angular/animations'
 import { Component } from '@angular/core';
 import { CommonService } from 'src/app/services/common/common.service';
 import { Usuario } from '../../clases/usuario';
+import { LoginService } from '../../services/login/login.service';
 
 @Component({
   selector: 'app-login',
@@ -33,10 +34,14 @@ export class LoginComponent {
   registerUsername = '';
   _loginUser = new Usuario();
   _loginCreate = new Usuario();
-  constructor(private commonService: CommonService) { }
+  constructor(private commonService: CommonService, private loginService: LoginService) { }
 
 
-  onLogin() {
+  async onLogin() {
+    const validate = await this.validarCampos(this._loginCreate);
+    if (validate) {
+      alert(validate)
+    }
   }
 
 
@@ -51,7 +56,15 @@ export class LoginComponent {
   async onRegister() {
     const validate = await this.validarCampos(this._loginCreate);
     if (validate) {
-      alert(validate)
+      this.loginService.registrarUsuario(this._loginCreate).subscribe(
+        (response: any) => {
+          debugger
+            var strTitulo = response.status ==  200 ? 'Correcto' : 'Error';
+            this.commonService.mostrarAlert(strTitulo, response.mensaje);    
+            this._loginCreate = new Usuario();
+        }
+
+      )
     }
   }
 
@@ -67,9 +80,7 @@ export class LoginComponent {
           }
         }
       }
-      this.commonService.mostrarAlert('Error', strErrores);
-
-    
+      this.commonService.mostrarAlert('Error', strErrores);    
       
       return false;
     } else {
