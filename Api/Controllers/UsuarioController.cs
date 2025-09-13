@@ -1,4 +1,5 @@
 ﻿using Dtos;
+using Dtos.Deudas;
 using Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -73,7 +74,7 @@ namespace Controllers
         /// metodo para consultar el listado de mis usuario
         /// </summary>
         /// <returns>listado de usuarios</returns>
-        [HttpPost]
+        [HttpGet]
         [Route("GetUsuarios")]
         [Authorize(Roles = "Autenticado, Anonimo")]
         public async Task<JsonResultHelper> GetUsuarios()
@@ -82,6 +83,25 @@ namespace Controllers
             try
             {
                 resultJson.Data = await _IUsuarios.GetUsuarios();
+            }
+            catch (Exception e)
+            {
+                resultJson.Status = System.Net.HttpStatusCode.BadRequest;
+                resultJson.Errors.Add(e.Message);
+            }
+            return resultJson;
+        }
+
+        [HttpPost]
+        [Route("CreateUsuarios")]
+        [Authorize(Roles = "Autenticado, Anonimo")]
+        public async Task<JsonResultHelper> CreateUsuarios(UsuarioDTO datos)
+        {
+
+            try
+            {
+                var result = await _IUsuarios.CreateUsuarios(datos);
+                resultJson.mensaje = result ? "Usuario creado correctamente" : "El usuario no se pudo crear verifique los datos";
             }
             catch (Exception e)
             {

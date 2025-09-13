@@ -1,4 +1,4 @@
-Aplicación desarrollada en .net core 5
+Aplicación desarrollada en .net core 9
 
 respuesta estandar api:
 

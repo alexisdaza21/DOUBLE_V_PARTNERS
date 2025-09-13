@@ -10,13 +10,8 @@ namespace Data
         public ContextPostgres(DbContextOptions<ContextPostgres> options) : base(options)
         {
 
-        }
-        
+        }        
         public virtual DbSet<UsuarioDTO> Usuarios { get; set; }
-        //public virtual DbSet<ConfigDTO> config { get; set; }
-        //public virtual DbSet<DataSP> dataSP { get; set; }
-        //public virtual DbSet<DataSPResponse> dataSPResponse { get; set; }
-        //public virtual DbSet<LogExcelDTO> logExcelDTO { get; set; }
 
     }
 }

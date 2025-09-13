@@ -25,8 +25,20 @@ namespace Services.Deuda
             _context = context;
         }
 
-
-
+        public async Task<bool> CreateUsuarios(UsuarioDTO datos)
+        {
+            try
+            {
+                await _context.Usuarios.AddAsync(datos);
+                var result = await _context.SaveChangesAsync();
+                return result > 0;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+      
+        }
 
         public async Task<List<UsuarioDTO>> GetUsuarios()
         {
