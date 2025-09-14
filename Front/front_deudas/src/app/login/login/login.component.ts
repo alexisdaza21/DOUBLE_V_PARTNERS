@@ -3,6 +3,7 @@ import { Component } from '@angular/core';
 import { CommonService } from 'src/app/services/common/common.service';
 import { Usuario } from '../../clases/usuario';
 import { LoginService } from '../../services/login/login.service';
+import { environment } from '../../../Eviroments/enviroments';
 
 @Component({
   selector: 'app-login',
@@ -27,21 +28,26 @@ import { LoginService } from '../../services/login/login.service';
 export class LoginComponent {
 
   showRegisterModal = false;
-
+  _isSesion = false;
   _loginUser = new Usuario();
   _loginCreate = new Usuario();
   constructor(private commonService: CommonService, private loginService: LoginService) { }
 
 
   async onLogin() {
-    const validate = await this.validarCampos(this._loginUser);
+    const validate = await this.commonService.validarCampos(this._loginUser);
     if (validate) {
       this.loginService.login(this._loginUser).subscribe(
         (response: any) => {
-          debugger
-          var strTitulo = response.status == 200 ? 'Correcto' : 'Error';
+          var strTitulo = 'Error';
+          if (response.status == 200) {
+            strTitulo = 'Correcto';
+            this._loginUser.id = response.data[0].id;
+            environment.hsJwt = response.data[0].password;
+            this._loginUser.password = '';
+            this._isSesion = true;
+          }
           this.commonService.mostrarAlert(strTitulo, response.mensaje);
-          this._loginCreate = new Usuario();
         }
       )
     }
@@ -57,11 +63,11 @@ export class LoginComponent {
   }
 
   async onRegister() {
-    const validate = await this.validarCampos(this._loginCreate);
+    const validate = await this.commonService.validarCampos(this._loginCreate);
     if (validate) {
       this.loginService.registrarUsuario(this._loginCreate).subscribe(
         (response: any) => {
-          debugger
+          
           var strTitulo = response.status == 200 ? 'Correcto' : 'Error';
           this.commonService.mostrarAlert(strTitulo, response.mensaje);
           this._loginCreate = new Usuario();
@@ -71,26 +77,9 @@ export class LoginComponent {
     }
   }
 
-  async validarCampos(datos: Usuario) {
+  onCloseSesion() {
 
-    const result = this.commonService.validateModel(datos)
-    if (result.length > 0) {
-      let strErrores = '';
-      for (const error of result) {
-        for (const constraint in error.constraints) {
-          if (Object.prototype.hasOwnProperty.call(error.constraints, constraint)) {
-            strErrores += `- ${error.constraints[constraint]} \n `;
-          }
-        }
-      }
-      this.commonService.mostrarAlert('Error', strErrores);
-
-      return false;
-    } else {
-      return true;
-    }
-
+    location.reload();
   }
-
 
 }

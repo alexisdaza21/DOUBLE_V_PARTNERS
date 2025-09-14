@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.Text;
 using Services.Deuda;
 using Utils;
+using ApiDeudas.Services.Deuda;
 
 namespace ApiDeudas
 {
@@ -38,6 +39,7 @@ namespace ApiDeudas
                 options.UseNpgsql(Configuration.GetConnectionString("postgres")));
 
             services.AddTransient<IUsuarios, UsuarioServices>();
+            services.AddTransient<IDeudas, DeudasServices>();
 
             services.AddControllers(options =>
             {

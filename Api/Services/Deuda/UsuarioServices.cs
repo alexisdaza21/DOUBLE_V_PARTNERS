@@ -44,7 +44,6 @@ namespace Services.Deuda
       
         }
 
-
         public async Task<List<UsuarioDTO>> GetUsuarios(UsuarioDTO datos)
         {
             var usuarios = new List<UsuarioDTO>();
@@ -62,12 +61,12 @@ namespace Services.Deuda
             return usuarios;
         }
 
-        public async Task<string> GetTokenAnonimo(string usuario)
+        public async Task<string> GetToken(string usuario, string rol, string idCliente)
         {
-            return await generarToken(usuario, "Anonimo");
+            return await generarToken(usuario, rol, idCliente);
         }
 
-        private async Task<string> generarToken(string usuario, string rol, string idCliente = "")
+        private async Task<string> generarToken(string usuario, string rol, string idCliente)
         {
 
             //cabecera

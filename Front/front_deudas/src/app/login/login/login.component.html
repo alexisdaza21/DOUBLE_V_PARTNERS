@@ -1,41 +1,59 @@
-<div class="login-wrapper">
-    <div class="login-container">
-        <h2>Iniciar Sesión</h2>
+<div *ngIf="!_isSesion">
+    <div class="d-flex justify-content-center align-items-center vh-100 bg-light">
+        <div class="card shadow p-4" style="width: 350px;">
+            <h2 class="text-center mb-4">Iniciar Sesión</h2>
 
-        <div class="input-group">
-            <label for="email">Correo</label>
-            <input type="email" id="email" [(ngModel)]="_loginUser.email" placeholder="Ingrese su correo" autocomplete="off" />
-        </div>
+            <div class="mb-3">
+                <label for="email" class="form-label">Correo</label>
+                <input type="email" id="email" [(ngModel)]="_loginUser.email" class="form-control"
+                    placeholder="Ingrese su correo" autocomplete="off" />
+            </div>
 
-        <div class="input-group">
-            <label for="password">Contraseña</label>
-            <input type="password" id="password" [(ngModel)]="_loginUser.password" placeholder="Ingrese su contraseña"
-                autocomplete="off" />
-        </div>
+            <div class="mb-3">
+                <label for="password" class="form-label">Contraseña</label>
+                <input type="password" id="password" [(ngModel)]="_loginUser.password" class="form-control"
+                    placeholder="Ingrese su contraseña" autocomplete="off" />
+            </div>
 
-        <button (click)="onLogin()">Ingresar</button>
+            <button class="btn btn-primary w-100 mb-3" (click)="onLogin()">Ingresar</button>
 
-        <div class="register-link">
-            ¿No cuentas con usuario? acá puedes <a href="#" (click)="openRegisterModal()">Registrarte</a>
+            <div class="text-center">
+                <small class="text-muted">
+                    ¿No tienes usuario? <a href="#" (click)="openRegisterModal()">Regístrate</a>
+                </small>
+            </div>
         </div>
     </div>
+    <!-- Modal registrarse -->
+    <div class="modal fade show" tabindex="-1" style="display: block;" *ngIf="showRegisterModal">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Registrarse</h5>
+                    <button type="button" class="btn-close" (click)="closeRegisterModal()"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="regEmail" class="form-label">Correo</label>
+                        <input type="email" id="regEmail" class="form-control" [(ngModel)]="_loginCreate.email"
+                            placeholder="Ingrese su correo" autocomplete="off">
+                    </div>
+                    <div class="mb-3">
+                        <label for="regUsername" class="form-label">Contraseña</label>
+                        <input type="password" id="regUsername" class="form-control" [(ngModel)]="_loginCreate.password"
+                            placeholder="Ingrese su contraseña" autocomplete="off">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary btn-sm" (click)="onRegister()">Registrarse</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal backdrop -->
+    <div class="modal-backdrop fade show" *ngIf="showRegisterModal"></div>
 </div>
 
-<div class="modal-backdrop" *ngIf="showRegisterModal" (click)="closeRegisterModal()"></div>
-
-<!-- Modal registrarse -->
-<div class="modal" *ngIf="showRegisterModal" [@fadeModal]="'show'">
-    <span class="close" (click)="closeRegisterModal()">&times;</span>
-    <h3>Registrarse</h3>
-    <div class="input-group">
-        <label for="regEmail">Correo</label>
-        <input type="email" id="regEmail" [(ngModel)]="_loginCreate.email" placeholder="Ingrese su correo"
-            autocomplete="off" />
-    </div>
-    <div class="input-group">
-        <label for="regUsername">Contraseña</label>
-        <input type="password" id="regUsername" [(ngModel)]="_loginCreate.password" placeholder="Ingrese su contraseña"
-            autocomplete="off" />
-    </div>
-    <button (click)="onRegister()">Registrarse</button>
+<div *ngIf="_isSesion">
+    <app-inicio [_usuario]="_loginUser" (closeSesionEvent)="onCloseSesion()"></app-inicio>
 </div>

@@ -12,6 +12,8 @@ namespace Data
 
         }        
         public virtual DbSet<UsuarioDTO> Usuarios { get; set; }
+        public virtual DbSet<DeudasDTO> Deudas { get; set; }
+        public virtual DbSet<AbonosDTO> Abonos { get; set; }
 
     }
 }

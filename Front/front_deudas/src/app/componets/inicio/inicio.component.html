@@ -1,0 +1,184 @@
+<div class="container mt-4">
+    <!-- Header -->
+    <header class="d-flex justify-content-between align-items-center mb-4 p-3 bg-light rounded">
+        <h1 class="h5 mb-0">Usuario: {{ _usuario.email }}</h1>
+        <button class="btn btn-danger btn-sm" (click)="closeSesion()">Cerrar sesión</button>
+    </header>
+    <main>
+        <!-- Tabs de navegación -->
+        <ul class="nav nav-tabs mb-3">
+            <li class="nav-item">
+                <button class="nav-link" [class.active]="activeTab === 'pendientes'"
+                    (click)="activeTab = 'pendientes';getDeudas()">
+                    Amigos con deudas pendientes
+                </button>
+            </li>
+            <li class="nav-item">
+                <button class="nav-link" [class.active]="activeTab === 'pagadas'"
+                    (click)="activeTab = 'pagadas'; getDeudas()">
+                    Amigos con deudas pagadas
+                </button>
+            </li>
+        </ul>
+
+        <!-- Contenido del tab de pendientes -->
+        <div *ngIf="activeTab === 'pendientes'">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h2 class="h6">Amigos con deudas pendientes</h2>
+                <button class="btn btn-primary btn-sm" (click)="openModalRegisterDeuda()">Crear Deuda</button>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table table-striped table-bordered">
+                    <thead class="table-light">
+                        <tr>
+                            <th>#</th>
+                            <th>Amigo que debe</th>
+                            <th>Amigo que prestó</th>
+                            <th>Monto</th>
+                            <th>Descripción</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let deuda of _deudas">
+                            <td>{{ deuda.idDeuda }}</td>
+                            <td>{{ deuda.usuarioDebe }}</td>
+                            <td>{{ deuda.usuarioPresta }}</td>
+                            <td>{{ deuda.monto | currency:'COP':'symbol' }}</td>
+                            <td>{{ deuda.descripcion }}</td>
+                            <td>
+                                <button class="btn btn-success btn-sm m-1" (click)="pagarDeudas(deuda.idDeuda)">
+                                    Pagar
+                                </button>
+                                <button class="btn btn-danger btn-sm m-1" (click)="eliminarDeuda(deuda.idDeuda)">
+                                    Eliminar
+                                </button>
+                                <button class="btn btn-info btn-sm m-1" (click)="openModalAbonarDeuda(deuda.idDeuda)">
+                                    Abonar
+                                </button>
+                                <button *ngIf="deuda.fechaPago" class="btn btn-warning btn-sm m-1"
+                                    (click)="openModalAbonos(deuda)">
+                                    Ver abonos
+                                </button>
+                                <button *ngIf="!deuda.fechaPago" class="btn btn-success btn-sm m-1"
+                                    (click)="openModalAbonos(deuda)">
+                                    Editar
+                                </button>
+                            </td>
+                        </tr>
+                        <tr *ngIf="_deudas.length === 0">
+                            <td colspan="7" class="text-center text-muted">No hay deudas pendientes</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Contenido del tab de pagadas -->
+        <div *ngIf="activeTab === 'pagadas'">
+            <h2 class="h6 mb-3">Amigos con deudas pagadas</h2>
+
+            <div class="table-responsive">
+                <table class="table table-striped table-bordered">
+                    <thead class="table-light">
+                        <tr>
+                            <th>#</th>
+                            <th>Amigo que pagó</th>
+                            <th>Amigo que prestó</th>
+                            <th>Monto</th>
+                            <th>Descripción</th>
+                            <th>Fecha de pago</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let deuda of _deudas">
+                            <td>{{ deuda.idDeuda }}</td>
+                            <td>{{ deuda.usuarioDebe }}</td>
+                            <td>{{ deuda.usuarioPresta }}</td>
+                            <td>{{ deuda.monto | currency:'COP':'symbol' }}</td>
+                            <td>{{ deuda.descripcion }}</td>
+                            <td>{{ deuda.fechaPago }}</td>
+                            <td>
+
+                                <button *ngIf="deuda.fechaPago" class="btn btn-warning btn-sm m-1"
+                                    (click)="openModalAbonos(deuda)">
+                                    Ver abonos
+                                </button>
+                            </td>
+                        </tr>
+                        <tr *ngIf="_deudas.length === 0">
+                            <td colspan="7" class="text-center text-muted">No hay deudas pagadas</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+</div>
+
+<!-- Modal Crear Deuda -->
+<div class="modal fade show" tabindex="-1" style="display: block;" *ngIf="showModalRegisterDeuda">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Crear Deuda</h5>
+                <button type="button" class="btn-close" (click)="closeModalRegisterDeuda()"></button>
+            </div>
+            <app-crear (getDeudasEvent)="getDeudas()"></app-crear>
+        </div>
+    </div>
+</div>
+
+<!-- Modal abonos -->
+<div class="modal fade show" tabindex="-1" style="display: block;" *ngIf="showModalAbonarDeuda">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Abonar a la deuda</h5>
+                <button type="button" class="btn-close" (click)="closeModalAbonarDeuda()"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label for="regEmail" class="form-label">Correo</label>
+                    <input type="number" id="monto" class="form-control" [(ngModel)]="_abono.monto" name="monto" min="0"
+                        step="0.01" placeholder="Ingrese el monto" required>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary btn-sm" (click)="createAbono()">Agregar abono</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal listar Abonos -->
+<div class="modal fade show" tabindex="-1" style="display: block;" *ngIf="showModalAbonos">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Abonos de la deuda: {{_abono.descripcion}}</h5>
+                <button type="button" class="btn-close" (click)="closeModalAbonos()"></button>
+            </div>
+            <app-listar-abonos [_idDeuda]="_abono.idDeuda"></app-listar-abonos>
+        </div>
+    </div>
+</div>
+
+<!-- Modal edit deuda -->
+<div class="modal fade show" tabindex="-1" style="display: block;" *ngIf="showModalAbonos">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Abonos de la deuda: {{_abono.descripcion}}</h5>
+                <button type="button" class="btn-close" (click)="closeModalAbonos()"></button>
+            </div>
+            <app-listar-abonos [_idDeuda]="_abono.idDeuda"></app-listar-abonos>
+        </div>
+    </div>
+</div>
+
+<!-- Modal backdrop -->
+<div class="modal-backdrop fade show" *ngIf="showbackdrop"></div>

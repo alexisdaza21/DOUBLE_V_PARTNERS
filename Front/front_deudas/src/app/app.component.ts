@@ -13,7 +13,6 @@ export class AppComponent {
 
     this.commonService.getTokenAnonimo()
     .subscribe( (response: any) => {
-      debugger
       if (response.status === 200) {
         environment.hsJwt = response.data;
       }

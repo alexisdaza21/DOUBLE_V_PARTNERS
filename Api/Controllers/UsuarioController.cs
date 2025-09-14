@@ -1,16 +1,10 @@
-﻿using Dtos;
-using Dtos.Deudas;
+﻿using Dtos.Deudas;
 using Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using System;
-using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
-using System.Net.Http;
-using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 using Utils;
 
@@ -31,9 +25,7 @@ namespace Controllers
             _IUsuarios = IUsuarios;
             _configuration = configuration;
         }
-
-
-    
+            
         /// <summary>
         /// Metodo para obtener token con rol de anonimo para consumir metodos sin autenticarse con credenciales
         /// </summary>
@@ -47,8 +39,7 @@ namespace Controllers
         {
             try
             {
-
-                var result = await _IUsuarios.GetTokenAnonimo(_configuration.GetValue<string>("UsuarioAnonimo"));
+                var result = await _IUsuarios.GetToken(_configuration.GetValue<string>("UsuarioAnonimo"), "Anonimo", "");
                 if (!string.IsNullOrEmpty(result))
                 {
                     resultJson.Data = result;
@@ -82,7 +73,8 @@ namespace Controllers
         
             try
             {
-                resultJson.Data = await _IUsuarios.GetUsuarios(null);
+                var usuariNull = new UsuarioDTO();
+                resultJson.Data = await _IUsuarios.GetUsuarios(usuariNull);
             }
             catch (Exception e)
             {
@@ -92,6 +84,11 @@ namespace Controllers
             return resultJson;
         }
 
+        /// <summary>
+        /// Crear usuario para logue del aplicativo
+        /// </summary>
+        /// <param name="datos">clase de usuario</param>
+        /// <returns>boleano dependiendo del proceso de la transacción</returns>
         [HttpPost]
         [Route("CreateUsuarios")]
         [Authorize(Roles = "Autenticado, Anonimo")]
@@ -128,6 +125,7 @@ namespace Controllers
 
                 if (result.Count > 0)
                 {
+                    result[0].password = _IUsuarios.GetToken(datos.email, "Autenticado", "").Result;
                     resultJson.Data = result;
                     resultJson.mensaje = "Usuario encontrado";
                 }

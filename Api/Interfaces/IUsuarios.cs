@@ -9,6 +9,6 @@ namespace Interfaces
     {
         Task<List<UsuarioDTO>> GetUsuarios(UsuarioDTO datos);
         Task<bool> CreateUsuarios(UsuarioDTO datos);
-        Task<string> GetTokenAnonimo(string usuario);
+        Task<string> GetToken(string usuario, string rol, string idCliente);
     }
 }
