@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
 using System;
 using System.Threading.Tasks;
 using Utils;
@@ -156,6 +157,28 @@ namespace ApiDeudas.Controllers
                 resultJson.Errors.Add(e.Message);
             }
             return resultJson;
+        }
+
+        [HttpGet]
+        [Route("GetDeudasJson")]
+        [Authorize(Roles = "Autenticado, Anonimo")]
+        public async Task<IActionResult> GetDeudasJson(int tipo)
+        {
+            try
+            {
+                var deudas = await _IDeudas.GetDeudas(tipo);
+
+                var json = JsonConvert.SerializeObject(deudas, Formatting.Indented);
+                var bytes = System.Text.Encoding.UTF8.GetBytes(json);
+
+                return File(bytes, "application/json", $"deudas-{DateTime.Now.ToString("yyyy-MM-dd")}.json");
+
+            }
+            catch (Exception e)
+            {
+                // Puedes devolver un JSON con el error o un código HTTP
+                return BadRequest(new { error = e.Message });
+            }
         }
     }
 }
