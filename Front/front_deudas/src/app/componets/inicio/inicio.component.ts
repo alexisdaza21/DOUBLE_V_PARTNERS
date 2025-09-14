@@ -15,8 +15,10 @@ export class InicioComponent {
   activeTab: 'pendientes' | 'pagadas' = 'pendientes';
   showModalRegisterDeuda = false;
   showModalAbonarDeuda = false;
+  showModalDeudaEdit = false;
   showModalAbonos = false;
   showbackdrop = false;
+  _deudaEdit: any = {};
   _deudas: any[] = [];
   _abono = {
     idDeuda: 0,
@@ -123,7 +125,17 @@ export class InicioComponent {
     this.showModalAbonos = false;
   }
 
+  openModalDeudaEdit(deuda: any) {
+    this._deudaEdit = deuda;
+    this.showbackdrop = true;
+    this.showModalDeudaEdit = true;
+  }
 
+  closeModalDeudaEdit() {
+    this._deudaEdit = {};
+    this.showbackdrop = false;
+    this.showModalDeudaEdit = false;
+  }
 
 
 

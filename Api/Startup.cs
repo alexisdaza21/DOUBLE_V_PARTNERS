@@ -1,3 +1,4 @@
+﻿using ApiDeudas.Services.Deuda;
 using Data;
 using Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -8,11 +9,11 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Services.Deuda;
+using StackExchange.Redis;
 using System.Collections.Generic;
 using System.Text;
-using Services.Deuda;
 using Utils;
-using ApiDeudas.Services.Deuda;
 
 namespace ApiDeudas
 {
@@ -37,6 +38,13 @@ namespace ApiDeudas
 
             services.AddDbContext<ContextPostgres>(options =>
                 options.UseNpgsql(Configuration.GetConnectionString("postgres")));
+
+            services.AddSingleton<IConnectionMultiplexer>(sp =>
+            {
+                var configuration = StackExchange.Redis.ConfigurationOptions.Parse("localhost:6379");
+                configuration.AbortOnConnectFail = false; 
+                return StackExchange.Redis.ConnectionMultiplexer.Connect(configuration);
+            });
 
             services.AddTransient<IUsuarios, UsuarioServices>();
             services.AddTransient<IDeudas, DeudasServices>();

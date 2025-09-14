@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { environment } from '../../../Eviroments/enviroments';
 import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { validateSync } from 'class-validator';
 import { Usuario } from 'src/app/clases/usuario';
 
@@ -11,6 +11,10 @@ import { Usuario } from 'src/app/clases/usuario';
 export class CommonService {
 
     private api: string = environment.apiUrl;
+    private loadingSubject = new BehaviorSubject<boolean>(false);
+    loading$ = this.loadingSubject.asObservable();
+
+    private requests = 0;
     constructor(private http: HttpClient) {
     }
 
@@ -47,5 +51,19 @@ export class CommonService {
             return true;
         }
 
+    }
+
+
+    showLoading() {
+        this.requests++;
+        this.loadingSubject.next(true);
+    }
+
+    hideLoading() {
+        this.requests--;
+        if (this.requests <= 0) {
+            this.loadingSubject.next(false);
+            this.requests = 0;
+        }
     }
 }

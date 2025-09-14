@@ -8,7 +8,8 @@ import { environment } from '../Eviroments/enviroments';
 })
 export class AppComponent {
   title = 'front_deudas';
-  
+  loading$ = this.commonService.loading$;
+
   constructor(private commonService: CommonService) {
 
     this.commonService.getTokenAnonimo()

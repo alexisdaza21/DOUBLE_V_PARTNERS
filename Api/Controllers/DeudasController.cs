@@ -111,7 +111,7 @@ namespace ApiDeudas.Controllers
             try
             {
                 var result = await _IDeudas.CreateAbono(idDeuda, monto);
-                resultJson.mensaje = result ? "El abono se creo correctamente" : "El abono se pudo crear";
+                resultJson.mensaje = result ? "El abono se creo correctamente" : "El abono no se pudo crear";
             }
             catch (Exception e)
             {
@@ -130,6 +130,25 @@ namespace ApiDeudas.Controllers
             try
             {
                 resultJson.Data = await _IDeudas.GetAbonos(idDeuda);
+            }
+            catch (Exception e)
+            {
+                resultJson.Status = System.Net.HttpStatusCode.BadRequest;
+                resultJson.Errors.Add(e.Message);
+            }
+            return resultJson;
+        }
+
+        [HttpPost]
+        [Route("EditDeuda")]
+        [Authorize(Roles = "Autenticado")]
+        public async Task<JsonResultHelper> EditDeuda(int idDeuda, decimal monto)
+        {
+
+            try
+            {
+                var result = await _IDeudas.EditDeuda(idDeuda, monto);
+                resultJson.mensaje = result ? "La deuda se edito correctamente" : "La deuda no se pudo editar";
             }
             catch (Exception e)
             {

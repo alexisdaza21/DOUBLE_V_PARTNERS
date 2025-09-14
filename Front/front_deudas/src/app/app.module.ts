@@ -10,7 +10,6 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
 import { InicioComponent } from './componets/inicio/inicio.component';
 import { CrearComponent } from './componets/deudas/crear/crear.component';
-import { ListarComponent } from './componets/deudas/listar/listar.component';
 import { ListarAbonosComponent } from './componets/deudas/listar-abonos/listar-abonos.component';
 import { EditarComponent } from './componets/deudas/editar/editar.component';
 
@@ -20,7 +19,6 @@ import { EditarComponent } from './componets/deudas/editar/editar.component';
     LoginComponent,
     InicioComponent,
     CrearComponent,
-    ListarComponent,
     ListarAbonosComponent,
     EditarComponent
   ],

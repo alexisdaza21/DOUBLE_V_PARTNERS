@@ -12,5 +12,8 @@ namespace Interfaces
         Task<bool> EliminarDeuda(int idDeuda);
         Task<bool> CreateAbono(int idDeuda, decimal monto);
         Task<List<AbonosDTO>> GetAbonos(int idDeuda);
+
+        Task<bool> EditDeuda(int idDeuda, decimal monto);
+
     }
 }

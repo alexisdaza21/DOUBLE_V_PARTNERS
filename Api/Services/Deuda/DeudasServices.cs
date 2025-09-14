@@ -3,6 +3,8 @@ using Dtos.Deudas;
 using Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
+using StackExchange.Redis;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,12 +16,16 @@ namespace ApiDeudas.Services.Deuda
     {
 
         private readonly ContextPostgres _context;
+        private readonly IDatabase _redisDb;
         private readonly IConfiguration _configuracion;
-        public DeudasServices(ContextPostgres context, IConfiguration configuration)
+        public DeudasServices(ContextPostgres context, IConfiguration configuration, IConnectionMultiplexer redis)
         {
             _configuracion = configuration;
             _context = context;
+            _redisDb = redis?.GetDatabase();
+
         }
+
 
         public async Task<bool> CreateDeudas(DeudasDTO datos)
         {
@@ -166,9 +172,77 @@ namespace ApiDeudas.Services.Deuda
             }
         }
 
+        //public async Task<List<AbonosDTO>> GetAbonos(int idDeuda)
+        //{
+        //    return await _context.Abonos.Where(w => w.idDeuda  == idDeuda).ToListAsync();
+        //}
+
         public async Task<List<AbonosDTO>> GetAbonos(int idDeuda)
         {
-            return await _context.Abonos.Where(w => w.idDeuda  == idDeuda).ToListAsync();
+
+            if (_redisDb != null)
+            {
+                string cacheKey = $"Abonos:{idDeuda}";
+                try
+                {
+                    var cachedData = await _redisDb.StringGetAsync(cacheKey);
+                    if (!cachedData.IsNullOrEmpty)
+                    {
+                        var abonosRedis = JsonConvert.DeserializeObject<List<AbonosDTO>>(cachedData);
+
+                        // Comparar cantidad con la BD
+                        int countDb = await _context.Abonos.CountAsync(w => w.idDeuda == idDeuda);
+                        if (abonosRedis.Count == countDb)
+                        {
+                            return abonosRedis;
+                        }
+                    }
+                }
+                catch
+                {
+                   
+                }
+            }
+
+
+            var abonosDb = await _context.Abonos
+                .Where(w => w.idDeuda == idDeuda)
+                .ToListAsync();
+
+            if (_redisDb != null)
+            {
+                try
+                {
+                    string cacheKey = $"Abonos:{idDeuda}";
+                    await _redisDb.StringSetAsync(cacheKey, JsonConvert.SerializeObject(abonosDb), TimeSpan.FromMinutes(10));
+                }
+                catch
+                {
+                   
+                }
+            }
+
+            return abonosDb;
+        }
+
+        public async Task<bool> EditDeuda(int idDeuda, decimal monto)
+        {
+            try
+            {
+                var deuda = await _context.Deudas.FindAsync(idDeuda);
+
+                if (deuda == null)
+                    return false;
+
+                deuda.monto = monto;
+
+                var result = await _context.SaveChangesAsync();
+                return result > 0;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
         }
     }
 }

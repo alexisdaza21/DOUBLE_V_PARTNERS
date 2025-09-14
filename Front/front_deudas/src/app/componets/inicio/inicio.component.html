@@ -62,7 +62,7 @@
                                     Ver abonos
                                 </button>
                                 <button *ngIf="!deuda.fechaPago" class="btn btn-success btn-sm m-1"
-                                    (click)="openModalAbonos(deuda)">
+                                    (click)="openModalDeudaEdit(deuda)">
                                     Editar
                                 </button>
                             </td>
@@ -77,8 +77,10 @@
 
         <!-- Contenido del tab de pagadas -->
         <div *ngIf="activeTab === 'pagadas'">
-            <h2 class="h6 mb-3">Amigos con deudas pagadas</h2>
-
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h2 class="h6 mb-3">Amigos con deudas pagadas</h2>
+                <button class="btn btn-primary btn-sm" (click)="openModalRegisterDeuda()">Crear Deuda</button>
+            </div>
             <div class="table-responsive">
                 <table class="table table-striped table-bordered">
                     <thead class="table-light">
@@ -168,14 +170,14 @@
 </div>
 
 <!-- Modal edit deuda -->
-<div class="modal fade show" tabindex="-1" style="display: block;" *ngIf="showModalAbonos">
+<div class="modal fade show" tabindex="-1" style="display: block;" *ngIf="showModalDeudaEdit">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Abonos de la deuda: {{_abono.descripcion}}</h5>
-                <button type="button" class="btn-close" (click)="closeModalAbonos()"></button>
+                <h5 class="modal-title">Abonos de la deuda: {{_deudaEdit.descripcion}}</h5>
+                <button type="button" class="btn-close" (click)="closeModalDeudaEdit()"></button>
             </div>
-            <app-listar-abonos [_idDeuda]="_abono.idDeuda"></app-listar-abonos>
+            <app-editar [_deuda]="_deudaEdit" (getDeudasEvent)="getDeudas()"></app-editar>
         </div>
     </div>
 </div>
