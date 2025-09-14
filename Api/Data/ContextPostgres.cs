@@ -1,6 +1,4 @@
-﻿using Dtos;
-using Data;
-using Dtos.Deudas;
+﻿using Dtos.Deudas;
 using Microsoft.EntityFrameworkCore;
 
 namespace Data

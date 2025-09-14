@@ -42,7 +42,11 @@ namespace ApiDeudas.Services.Deuda
 
         }
 
-
+        /// <summary>
+        /// Obtener las deudas segun su tip
+        /// </summary>
+        /// <param name="tipo">parametro  1 para no pagadas, >1 para pagadas</param>
+        /// <returns>listado de las deudas</returns>
         public async Task<List<DeudaUsuarioDTO>> GetDeudas(int tipo)
         {
             var query = from d in _context.Deudas
@@ -74,6 +78,11 @@ namespace ApiDeudas.Services.Deuda
             }
         }
 
+        /// <summary>
+        /// metodo para generar el pago de una deuda en su totalidad, inserta un abono con el todal de la deuda y descontando los abonos realizados
+        /// </summary>
+        /// <param name="idDeuda">id de la deuda a pagar</param>
+        /// <returns>retorna boleano con el resultado del proceso</returns>
 
         public async Task<bool> PagarDeuda(int idDeuda)
         {
@@ -116,7 +125,11 @@ namespace ApiDeudas.Services.Deuda
         }
 
 
-
+        /// <summary>
+        /// metodo para borrado logico de las deudas
+        /// </summary>
+        /// <param name="idDeuda">id de la deuda a eliminar</param>
+        /// <returns>retorna boleano con el resultado del proceso</returns>
         public async Task<bool> EliminarDeuda(int idDeuda)
         {
             try
@@ -137,6 +150,12 @@ namespace ApiDeudas.Services.Deuda
             }
         }
 
+        /// <summary>
+        /// Metodo para generar Abonos a la deuda
+        /// </summary>
+        /// <param name="idDeuda">id de la deuda a abonar</param>
+        /// <param name="monto">valore del monto a abonar</param>
+        /// <returns>retorna boleano con el resultado del proceso</returns>
         public async Task<bool> CreateAbono(int idDeuda, decimal monto)
         {
             try
@@ -173,11 +192,11 @@ namespace ApiDeudas.Services.Deuda
             }
         }
 
-        //public async Task<List<AbonosDTO>> GetAbonos(int idDeuda)
-        //{
-        //    return await _context.Abonos.Where(w => w.idDeuda  == idDeuda).ToListAsync();
-        //}
-
+        /// <summary>
+        /// Metodo para consultar los abonos, se inserta o actualiza en redis si la cantidad de registro no concuerrda
+        /// </summary>
+        /// <param name="idDeuda">id de la deuda para consultar los abonos</param>
+        /// <returns>retorna listado de tipo AbonosDTO</returns>
         public async Task<List<AbonosDTO>> GetAbonos(int idDeuda)
         {
 
@@ -226,6 +245,12 @@ namespace ApiDeudas.Services.Deuda
             return abonosDb;
         }
 
+        /// <summary>
+        /// Metodo para edirar el monto de una deuda
+        /// </summary>
+        /// <param name="idDeuda">id de la deuda a editar</param>
+        /// <param name="monto">valor del moto a actulizar</param>
+        /// <returns>retorna boleano con el resultado del proceso</returns>
         public async Task<bool> EditDeuda(int idDeuda, decimal monto)
         {
             try

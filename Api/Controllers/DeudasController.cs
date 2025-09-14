@@ -176,7 +176,6 @@ namespace ApiDeudas.Controllers
             }
             catch (Exception e)
             {
-                // Puedes devolver un JSON con el error o un código HTTP
                 return BadRequest(new { error = e.Message });
             }
         }

@@ -12,6 +12,9 @@ import { UsuariosService } from 'src/app/services/usuarios/usuarios.service';
 })
 export class CrearComponent {
 
+  //Logica paragenerar inserccion de deudas, no se permite seleccionar el mismo amigo en los campos 
+  //de los usuarios
+  
   _deuda = new Deuda();
 
   @Output() getDeudasEvent = new EventEmitter<void>();

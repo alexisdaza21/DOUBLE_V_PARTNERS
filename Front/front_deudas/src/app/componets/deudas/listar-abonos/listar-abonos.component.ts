@@ -11,6 +11,7 @@ export class ListarAbonosComponent implements OnChanges {
   @Input() _idDeuda: number = 0;
   _abonos: any[] = [];
 
+  //Metodo para consultar los abonos a las deudas, se calcular el valor total desde la vista
   constructor(private deudasService: DeudasService) {}
 
   ngOnChanges(changes: SimpleChanges) {

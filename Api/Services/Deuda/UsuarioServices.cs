@@ -1,5 +1,4 @@
-﻿using ApiDeudas;
-using Data;
+﻿using Data;
 using Dtos.Deudas;
 using Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -49,6 +48,11 @@ namespace Services.Deuda
       
         }
 
+        /// <summary>
+        /// Metodo para obtener los usuarios, almacenar en redis y actualizar si no concuerda la cantidad de registros
+        /// </summary>
+        /// <param name="datos">filtro de usuarios, su no se envia retorna todos los usuarios</param>
+        /// <returns>listado de tipo usuariosDto</returns>
         public async Task<List<UsuarioDTO>> GetUsuarios(UsuarioDTO datos)
         {
             List<UsuarioDTO> usuarios = new List<UsuarioDTO>();
@@ -129,6 +133,13 @@ namespace Services.Deuda
             return await generarToken(usuario, rol, idCliente);
         }
 
+        /// <summary>
+        /// Metodo para obtener el token con estructura clains y codificacion sha512
+        /// </summary>
+        /// <param name="usuario">usuario con el que se firma el token</param>
+        /// <param name="rol">tipo de rol para permitir consumo de endpoinst</param>
+        /// <param name="idCliente">de ser necesario para fururas validaciones y acciones</param>
+        /// <returns>string con el token generado</returns>
         private async Task<string> generarToken(string usuario, string rol, string idCliente)
         {
 

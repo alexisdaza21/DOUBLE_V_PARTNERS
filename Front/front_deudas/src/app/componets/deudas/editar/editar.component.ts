@@ -13,7 +13,7 @@ export class EditarComponent  {
   @Output() getDeudasEvent = new EventEmitter<void>();
   constructor(private deudasService: DeudasService, private commonService: CommonService,) {}
 
-
+  //logica para editar deudas, desde el front se restringe editar si la deuda ya tiene abonos
   editDeuda() {
     if (this._deuda.monto) {
       

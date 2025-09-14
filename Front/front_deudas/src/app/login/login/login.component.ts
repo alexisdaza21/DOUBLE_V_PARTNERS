@@ -27,6 +27,7 @@ import { environment } from '../../../Eviroments/enviroments';
 })
 export class LoginComponent {
 
+  //logica para insertar usuario y realizar validacion de login
   showRegisterModal = false;
   _isSesion = false;
   _loginUser = new Usuario();
@@ -78,7 +79,6 @@ export class LoginComponent {
   }
 
   onCloseSesion() {
-
     location.reload();
   }
 

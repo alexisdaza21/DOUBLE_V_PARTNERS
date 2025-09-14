@@ -10,6 +10,9 @@ import { DeudasService } from 'src/app/services/deudas/deudas.service';
   styleUrls: ['./inicio.component.css']
 })
 export class InicioComponent {
+  // logica del inicio principar recibe el usuario desde el login y envia los datos a los diferentes 
+  //vistas child (hijos)
+  
   @Input() _usuario!: Usuario;
   @Output() closeSesionEvent = new EventEmitter<void>();
   activeTab: 'pendientes' | 'pagadas' = 'pendientes';
